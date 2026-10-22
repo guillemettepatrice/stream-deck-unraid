@@ -1,0 +1,26 @@
+{
+    "Name": "Unraid",
+    "Description": "Plugin permettant de controler les disques Unraid et les conteneurs Docker.",
+    "ca.qg-gbcm.streamdeck.unraid.arraystate": {
+        "Name": "État de l'array de disques",
+        "Tooltip": "Affiche l'état de l'array de disque et le modifie."
+    },
+    "Localization": {
+        "TabAction": "Action",
+        "TabServer": "Serveur Unraid",
+        "RefreshRate": "Rafraîchissement (sec)",
+        "ServerHost": "Serveur Unraid (IP)",
+        "HostPlaceholder": "ex: http://192.168.1.10",
+        "ApiKey": "Clé API",
+        "ApiKeyPlaceholder": "Ta clé API GraphQL",
+        "SaveBtn": "Sauvegarder la configuration",
+        "Saved": "✔ Sauvegardé !",
+        "FreeSpace": "libre",
+        "NoConfig": "No config",
+        "StateStarted": "DÉMARRÉ",
+        "StateStopped": "ARRÊTÉ",
+        "StateParityCheck": "VÉRIF. PARITÉ",
+        "StateError": "ERREUR",
+        "StateUnknown": "INCONNU"
+    }
+}

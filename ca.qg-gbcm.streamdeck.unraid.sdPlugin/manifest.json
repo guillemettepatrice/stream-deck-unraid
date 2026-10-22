@@ -1,0 +1,49 @@
+{
+	"$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+	"Name": "Unraid",
+	"Version": "0.1.0.0",
+	"Author": "Patrice Guillemette",
+	"Actions": [
+		{
+			"Name": "Array state",
+			"UUID": "ca.qg-gbcm.streamdeck.unraid.arraystate",
+			"Icon": "imgs/actions/counter/icon",
+			"Tooltip": "Displays the array state and toggle it.",
+			"PropertyInspectorPath": "ui/arraystate.html",
+			"UserTitleEnabled": true,
+			"Controllers": [
+				"Keypad"
+			],
+			"States": [
+				{
+					"Image": "imgs/actions/counter/key",
+					"TitleAlignment": "middle"
+				}
+			]
+		}
+	],
+	"Category": "Unraid",
+	"CategoryIcon": "imgs/plugin/category-icon",
+	"CodePath": "bin/plugin.js",
+	"Description": "Plugin made to control unraid disk array and dockers containers",
+	"Icon": "imgs/plugin/marketplace",
+	"SDKVersion": 3,
+	"Software": {
+		"MinimumVersion": "7.1"
+	},
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "12"
+		},
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		}
+	],
+	"Nodejs": {
+		"Version": "24",
+		"Debug": "enabled"
+	},
+	"UUID": "ca.qg-gbcm.streamdeck.unraid"
+}
