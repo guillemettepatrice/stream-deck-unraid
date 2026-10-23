@@ -28,7 +28,9 @@
 			"Tooltip": "Displays the docker state and toggle it.",
 			"PropertyInspectorPath": "ui/dockerstate.html",
 			"UserTitleEnabled": true,
-			"Controllers": ["Keypad"],
+			"Controllers": [
+				"Keypad"
+			],
 			"States": [
 				{
 					"Image": "imgs/actions/docker/icon",
@@ -43,7 +45,9 @@
 			"Tooltip": "Displays global server statistics.",
 			"PropertyInspectorPath": "ui/serverstats.html",
 			"UserTitleEnabled": true,
-			"Controllers": ["Keypad"],
+			"Controllers": [
+				"Keypad"
+			],
 			"States": [
 				{
 					"Image": "imgs/actions/server/icon",
