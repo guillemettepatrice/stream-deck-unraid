@@ -1,34 +1,44 @@
 export class PollingService {
-    private static intervals: Map<string, NodeJS.Timeout> = new Map();
+    private static timeouts: Map<string, NodeJS.Timeout> = new Map();
+    private static errorCounts: Map<string, number> = new Map();
 
-  
-    public static start(actionId: string, seconds: number, callback: () => void): void {
+    public static start(
+        actionId: string, 
+        baseIntervalSeconds: number, 
+        callback: () => Promise<boolean> 
+    ): void {
         this.stop(actionId);
-
-        const safeSeconds = isNaN(seconds) || seconds < 5 ? 30 : seconds;
-        const interval = setInterval(callback, safeSeconds * 1000);
-
-        this.intervals.set(actionId, interval);
         
-        console.log(`[PollingService] Timer actif pour ${actionId} (${safeSeconds}s)`);
+        const executePoll = async () => {
+            const success = await callback();
+            let currentErrors = this.errorCounts.get(actionId) || 0;
+
+            if (success) {
+                this.errorCounts.set(actionId, 0);
+                currentErrors = 0;
+            } else {
+                currentErrors = Math.min(currentErrors + 1, 6);
+                this.errorCounts.set(actionId, currentErrors);
+            }
+
+            const baseMs = baseIntervalSeconds * 1000;
+            const multiplier = Math.pow(2, currentErrors);
+            const nextDelay = Math.min(baseMs * multiplier, 60000); 
+
+            const timeoutId = setTimeout(executePoll, nextDelay);
+            this.timeouts.set(actionId, timeoutId);
+            
+        };
+
+        executePoll();
     }
 
- 
     public static stop(actionId: string): void {
-        const interval = this.intervals.get(actionId);
-        if (interval) {
-            clearInterval(interval);
-            this.intervals.delete(actionId);
-            console.log(`[PollingService] Timer arrêté pour ${actionId}`);
+        const timeoutId = this.timeouts.get(actionId);
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+            this.timeouts.delete(actionId);
+            this.errorCounts.delete(actionId);
         }
-    }
-
-
-    public static stopAll(): void {
-        for (const [id, interval] of this.intervals.entries()) {
-            clearInterval(interval);
-        }
-        this.intervals.clear();
-        console.log("[PollingService] Tous les timers ont été arrêtés.");
     }
 }

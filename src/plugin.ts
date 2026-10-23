@@ -10,7 +10,7 @@ streamDeck.system.onDidReceiveDeepLink((ev) => {
 	});
 });
 
-streamDeck.logger.setLevel("info");
+streamDeck.logger.setLevel("debug");
 
 streamDeck.actions.registerAction(new ArrayState());
 streamDeck.actions.registerAction(new DockerState());

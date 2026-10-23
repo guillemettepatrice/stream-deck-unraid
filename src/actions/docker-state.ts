@@ -55,7 +55,8 @@ export class DockerState extends SingletonAction<DockerActionSettings> {
     }
 
     override async onSendToPlugin(ev: SendToPluginEvent<DockerActionSettings, any>): Promise<void> {
-        if (ev.payload?.event === "getDockerContainers") {
+        const payload = ev.payload as { event?: string };
+        if (payload?.event === "getDockerContainers") {
             try {
                 const containers = await UnraidService.getContainersList();
                 
@@ -78,14 +79,14 @@ export class DockerState extends SingletonAction<DockerActionSettings> {
         }
     }
 
-    private async updateStatus(action: any): Promise<void> {
+    private async updateStatus(action: any): Promise<boolean> {
         try {
             const settings = await action.getSettings();
             const containerName = settings.containerName || "";
 
             if (!containerName) {
                 await action.setImage(DockerStateView.render("", "NO CONFIG", false));
-                return;
+                return false;
             }
 
             const { state, isRunning } = await UnraidService.getContainerStatus(containerName);
@@ -95,18 +96,20 @@ export class DockerState extends SingletonAction<DockerActionSettings> {
             
             await action.setImage(DockerStateView.render(containerName, translatedState, isRunning));
             await action.setTitle("");
+            return true;
         } catch (error) {
             console.error("[DockerState] Erreur UI:", error);
             await action.showAlert();
+            return false;
         }
     }
 
     private async managePolling(action: any): Promise<void> {
         const settings = await action.getSettings();
-        const seconds = parseInt(settings.refreshRate || "15", 10);
+        const seconds = parseInt(settings.refreshRate || "5", 10);
         
-        PollingService.start(action.id, seconds, () => {
-            this.updateStatus(action);
+        PollingService.start(action.id, seconds, async () => {
+            return await this.updateStatus(action);
         });
     }
 }

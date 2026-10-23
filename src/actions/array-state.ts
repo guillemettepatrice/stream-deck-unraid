@@ -28,7 +28,7 @@ export class ArrayState extends SingletonAction<ActionSettings> {
         await ev.action.showOk();
     }
 
-    private async updateStatus(action: any): Promise<void> {
+    private async updateStatus(action: any): Promise<boolean> {
         try {
             const { state, totalSize, freeSpace } = await UnraidService.getArrayStatus();
             
@@ -48,18 +48,20 @@ export class ArrayState extends SingletonAction<ActionSettings> {
             
             await action.setImage(svgImage);
             await action.setTitle("");
+            return true
         } catch (error) {
             console.error("[ArrayState] Erreur UI:", error);
             await action.showAlert();
+            return false
         }
     }
 
     private async managePolling(action: any): Promise<void> {
         const settings = await action.getSettings();
-        const seconds = parseInt(settings.refreshRate, 10);
+        const seconds = parseInt(settings.refreshRate || "5", 10);
         
-        PollingService.start(action.id, seconds, () => {
-            this.updateStatus(action);
+        PollingService.start(action.id, seconds, async () => {
+            return await this.updateStatus(action);
         });
     }
 }

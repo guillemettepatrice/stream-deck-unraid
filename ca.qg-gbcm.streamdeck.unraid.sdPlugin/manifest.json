@@ -16,6 +16,7 @@
 			],
 			"States": [
 				{
+					"Image": "imgs/actions/array/icon",
 					"TitleAlignment": "bottom"
 				}
 			]
@@ -30,7 +31,8 @@
 			"Controllers": ["Keypad"],
 			"States": [
 				{
-				"TitleAlignment": "bottom"
+					"Image": "imgs/actions/docker/icon",
+					"TitleAlignment": "bottom"
 				}
 			]
 		},
@@ -44,7 +46,8 @@
 			"Controllers": ["Keypad"],
 			"States": [
 				{
-				"TitleAlignment": "bottom"
+					"Image": "imgs/actions/server/icon",
+					"TitleAlignment": "bottom"
 				}
 			]
 		}

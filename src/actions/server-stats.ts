@@ -24,14 +24,16 @@ export class ServerStats extends SingletonAction<StatsSettings> {
         await this.managePolling(ev.action);
     }
 
-    private async updateStatus(action: any): Promise<void> {
+    private async updateStatus(action: any): Promise<boolean> {
         try {
             const { cpuUsage, ramUsage } = await UnraidService.getServerStats();
             await action.setImage(ServerStatsView.render(cpuUsage, ramUsage));
             await action.setTitle("");
+            return true;
         } catch (error) {
             console.error("[ServerStats] Erreur:", error);
             await action.showAlert();
+            return false;
         }
     }
 
@@ -39,8 +41,8 @@ export class ServerStats extends SingletonAction<StatsSettings> {
         const settings = await action.getSettings();
         const seconds = parseInt(settings.refreshRate || "5", 10);
         
-        PollingService.start(action.id, seconds, () => {
-            this.updateStatus(action);
+        PollingService.start(action.id, seconds, async () => {
+            return await this.updateStatus(action);
         });
     }
 }
