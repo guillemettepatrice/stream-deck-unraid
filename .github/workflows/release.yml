@@ -24,7 +24,7 @@ jobs:
         run: npm run build
 
       - name: Pack Plugin
-        run: npx @elgato/cli pack -o release/
+        run: npx @elgato/cli pack ca.qg-gbcm.streamdeck.unraid.sdPlugin -o release/
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
