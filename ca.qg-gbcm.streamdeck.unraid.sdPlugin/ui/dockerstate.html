@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Configuration Docker</title>
+    <style>
+        .tab-container {
+            display: flex;
+            border-bottom: 1px solid #3d3d3d;
+            margin-bottom: 15px;
+            padding-top: 5px;
+            user-select: none;
+        }
+        .tab {
+            padding: 6px 15px;
+            color: #999;
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: 9pt;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .tab:hover {
+            color: #ddd;
+        }
+        .tab.selected {
+            color: #fff;
+            border-bottom: 2px solid #5881e0;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+    <!-- Ajuste le chemin du script selon ta structure de build, ex: js/sdpi-components.js ou sdpi-components.js -->
+    <script src="sdpi-components.js"></script>
+</head>
+<body>
+    <div class="sdpi-wrapper">
+        <!-- Navigation des onglets -->
+        <div class="sdpi-item">
+            <div class="sdpi-item-value tab-container">
+                <div class="tab selected" data-target="#tab-action" onclick="switchTab(this)">
+                    <sdpi-i18n key="Localization.TabAction"></sdpi-i18n>
+                </div>
+                <div class="tab" data-target="#tab-global" onclick="switchTab(this)">
+                    <sdpi-i18n key="Localization.TabServer"></sdpi-i18n>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenu de l'onglet Action (Spécifique au conteneur) -->
+        <div id="tab-action" class="tab-content active">
+            <sdpi-item label="__MSG_Localization.ContainerName__">
+            <!-- Le datasource déclenche un événement "getDockerContainers" vers le backend -->
+            <sdpi-select setting="containerName" datasource="getDockerContainers"></sdpi-select>
+        </sdpi-item>
+            
+            <sdpi-item label="__MSG_Localization.RefreshRate__">
+                <sdpi-textfield setting="refreshRate" placeholder="15"></sdpi-textfield>
+            </sdpi-item>
+        </div>
+
+        <!-- Contenu de l'onglet Global (Réutilisation parfaite de ton existant) -->
+        <div id="tab-global" class="tab-content">
+            <sdpi-item label="__MSG_Localization.ServerHost__">
+                <sdpi-textfield id="unraidHost" setting="unraidHost" placeholder="__MSG_Localization.HostPlaceholder__" global></sdpi-textfield>
+            </sdpi-item>
+            
+            <sdpi-item label="__MSG_Localization.ApiKey__">
+                <sdpi-password id="apiKey" setting="apiKey" placeholder="__MSG_Localization.ApiKeyPlaceholder__" global></sdpi-password>
+            </sdpi-item>
+
+            <sdpi-item>
+                <sdpi-button id="saveBtn">
+                    <sdpi-i18n key="Localization.SaveBtn"></sdpi-i18n>
+                </sdpi-button>
+            </sdpi-item>
+        </div>
+    </div>
+
+    <!-- Branchement sur ton JS existant qui gère déjà switchTab et saveBtn -->
+    <script src="inspector.js"></script>
+</body>
+</html>

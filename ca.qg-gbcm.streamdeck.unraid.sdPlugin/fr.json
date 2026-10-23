@@ -5,6 +5,14 @@
         "Name": "État de l'array de disques",
         "Tooltip": "Affiche l'état de l'array de disque et le modifie."
     },
+    "ca.qg-gbcm.streamdeck.unraid.dockerstate": {
+        "Name": "État d'un conteneur Docker",
+        "Tooltip": "Affiche l'état d'un conteneur et le modifie."
+    },
+    "ca.qg-gbcm.streamdeck.unraid.serverstats": {
+        "Name": "Statistiques du serveur",
+        "Tooltip": "Affiche le CPU, la RAM et la température globale."
+    },
     "Localization": {
         "TabAction": "Action",
         "TabServer": "Serveur Unraid",
@@ -21,6 +29,12 @@
         "StateStopped": "ARRÊTÉ",
         "StateParityCheck": "VÉRIF. PARITÉ",
         "StateError": "ERREUR",
-        "StateUnknown": "INCONNU"
+        "StateUnknown": "INCONNU",
+        "ContainerName": "Nom du conteneur",
+        "StateRunning": "EN COURS",
+        "StateExited": "ARRÊTÉ",
+        "StateCreated": "CRÉÉ",
+        "StatePaused": "EN PAUSE",
+        "StateIntrouvable": "INTROUVABLE"
     }
 }

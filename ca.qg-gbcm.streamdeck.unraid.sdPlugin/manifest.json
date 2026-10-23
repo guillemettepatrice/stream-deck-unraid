@@ -7,7 +7,7 @@
 		{
 			"Name": "Array state",
 			"UUID": "ca.qg-gbcm.streamdeck.unraid.arraystate",
-			"Icon": "imgs/actions/counter/icon",
+			"Icon": "imgs/actions/array/icon",
 			"Tooltip": "Displays the array state and toggle it.",
 			"PropertyInspectorPath": "ui/arraystate.html",
 			"UserTitleEnabled": true,
@@ -16,17 +16,44 @@
 			],
 			"States": [
 				{
-					"Image": "imgs/actions/counter/key",
-					"TitleAlignment": "middle"
+					"TitleAlignment": "bottom"
+				}
+			]
+		},
+		{
+			"Name": "Docker state",
+			"UUID": "ca.qg-gbcm.streamdeck.unraid.dockerstate",
+			"Icon": "imgs/actions/docker/icon",
+			"Tooltip": "Displays the docker state and toggle it.",
+			"PropertyInspectorPath": "ui/dockerstate.html",
+			"UserTitleEnabled": true,
+			"Controllers": ["Keypad"],
+			"States": [
+				{
+				"TitleAlignment": "bottom"
+				}
+			]
+		},
+		{
+			"Name": "Server stats",
+			"UUID": "ca.qg-gbcm.streamdeck.unraid.serverstats",
+			"Icon": "imgs/actions/server/icon",
+			"Tooltip": "Displays global server statistics.",
+			"PropertyInspectorPath": "ui/serverstats.html",
+			"UserTitleEnabled": true,
+			"Controllers": ["Keypad"],
+			"States": [
+				{
+				"TitleAlignment": "bottom"
 				}
 			]
 		}
 	],
 	"Category": "Unraid",
-	"CategoryIcon": "imgs/plugin/category-icon",
+	"CategoryIcon": "imgs/plugin/pluginIcon",
 	"CodePath": "bin/plugin.js",
 	"Description": "Plugin made to control unraid disk array and dockers containers",
-	"Icon": "imgs/plugin/marketplace",
+	"Icon": "imgs/plugin/pluginIcon",
 	"SDKVersion": 3,
 	"Software": {
 		"MinimumVersion": "7.1"

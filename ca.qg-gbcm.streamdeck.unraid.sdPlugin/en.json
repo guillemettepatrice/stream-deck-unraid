@@ -5,6 +5,14 @@
         "Name": "Disk array state",
         "Tooltip": "Displays the array state and toggle it."
     },
+    "ca.qg-gbcm.streamdeck.unraid.dockerstate": {
+        "Name": "Docker container state",
+        "Tooltip": "Displays the container state and toggles it."
+    },
+    "ca.qg-gbcm.streamdeck.unraid.serverstats": {
+        "Name": "Server statistics",
+        "Tooltip": "Displays global server statistics."
+    },
     "Localization": {
         "TabAction": "Action",
         "TabServer": "Unraid Server",
@@ -21,6 +29,12 @@
         "StateStopped": "STOPPED",
         "StateParityCheck": "PARITY CHECK",
         "StateError": "ERROR",
-        "StateUnknown": "UNKNOWN"
+        "StateUnknown": "UNKNOWN",
+        "ContainerName": "Container name",
+        "StateRunning": "RUNNING",
+        "StateExited": "EXITED",
+        "StateCreated": "CREATED",
+        "StatePaused": "PAUSED",
+        "StateIntrouvable": "NOT FOUND"
     }
 }

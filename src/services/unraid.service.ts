@@ -11,6 +11,17 @@ export type ArrayStatusResult = {
     freeSpace: number;
 };
 
+export type DockerStatusResult = {
+    id: string;    
+    state: string;
+    isRunning: boolean;
+};
+
+export type ServerStatsResult = {
+    cpuUsage: number;
+    ramUsage: number;
+};
+
 export class UnraidService {
     /**
      * Méthode générique pour exécuter n'importe quelle requête GraphQL vers Unraid
@@ -35,12 +46,17 @@ export class UnraidService {
             body: JSON.stringify({ query })
         });
 
+        const responseText = await response.text();
+
         if (!response.ok) {
-            throw new Error(`Erreur HTTP ${response.status}`);
+            console.error(`[Unraid API] Erreur HTTP ${response.status} - Body:`, responseText);
+            throw new Error(`Erreur HTTP ${response.status}: ${responseText}`);
         }
 
-        const json = await response.json();
+        const json = JSON.parse(responseText);
+        
         if (json.errors) {
+            console.error("[Unraid API] Erreur GraphQL:", json.errors);
             throw new Error(`Erreur GraphQL: ${JSON.stringify(json.errors)}`);
         }
 
@@ -87,6 +103,132 @@ export class UnraidService {
         } catch (error) {
             console.error("[UnraidService] getArrayStatus:", error);
             return { state: "Error", freeSpace: 0, totalSize: 0 };
+        }
+    }
+
+    public static async getContainerStatus(containerName: string): Promise<DockerStatusResult> {
+        if (!containerName) return { id: "", state: "INCONNU", isRunning: false };
+
+        const query = `
+            query {
+                docker {
+                    containers {
+                        id
+                        names
+                        state
+                    }
+                }
+            }
+        `;
+
+        try {
+            const data = await this.queryGraphQL(query);
+            const containers = data?.docker?.containers || [];
+            
+            const targetContainer = containers.find((c: any) => {
+                let cleanName = Array.isArray(c.names) ? c.names[0] : c.names;
+                cleanName = cleanName.replace(/^\//, '');
+                return cleanName.toLowerCase() === containerName.toLowerCase();
+            });
+
+            if (!targetContainer) {
+                return { id: "", state: "INTROUVABLE", isRunning: false };
+            }
+
+            const currentState = targetContainer.state || "INCONNU";
+            const isRunning = currentState.toLowerCase() === "running" || currentState.toLowerCase() === "started";
+
+            return {
+                id: targetContainer.id,
+                state: currentState.toUpperCase(), 
+                isRunning: isRunning
+            };
+        } catch (error) {
+            console.error("[UnraidService] getContainerStatus:", error);
+            return { id: "", state: "ERROR", isRunning: false };
+        }
+    }
+
+    public static async getContainersList(): Promise<{label: string, value: string}[]> {
+        const query = `
+            query {
+                docker {
+                    containers {
+                        names
+                    }
+                }
+            }
+        `;
+
+        try {
+            const data = await this.queryGraphQL(query);
+            const containers = data?.docker?.containers || [];
+            
+            return containers
+                .map((c: any) => {
+                    let cleanName = Array.isArray(c.names) ? c.names[0] : c.names;
+                    cleanName = cleanName.replace(/^\//, '');
+                    
+                    return { label: cleanName, value: cleanName };
+                })
+                .sort((a: any, b: any) => a.label.localeCompare(b.label));
+        } catch (error) {
+            console.error("[UnraidService] getContainersList erreur:", error);
+            return [{ label: "Erreur API", value: "" }];
+        }
+    }
+
+    public static async toggleContainer(containerId: string, currentState: string): Promise<void> {
+        if (!containerId) throw new Error("ID du conteneur manquant");
+
+        const isRunning = currentState.toLowerCase() === "running" || currentState.toLowerCase() === "started";
+        
+        const query = `
+            mutation {
+                docker {
+                    ${isRunning ? 'stop' : 'start'}(id: "${containerId}") {
+                        state
+                    }
+                }
+            }
+        `;
+
+        try {
+            await this.queryGraphQL(query);
+            console.log(`[Unraid API] Commande ${isRunning ? 'stop' : 'start'} envoyée pour l'ID ${containerId}`);
+        } catch (error) {
+            console.error(`[UnraidService] Erreur lors du toggle de l'ID ${containerId}:`, error);
+            throw error; 
+        }
+    }
+
+    public static async getServerStats(): Promise<ServerStatsResult> {
+        const query = `
+            query {
+                metrics {
+                    memory {
+                        percentTotal
+                    }
+                    cpu {
+                        percentTotal
+                    }
+                }
+            }
+        `;
+
+        try {
+            const data = await this.queryGraphQL(query);
+            
+            const cpuUsage = data?.metrics?.cpu?.percentTotal || 0;
+            const ramUsage = data?.metrics?.memory?.percentTotal || 0;
+
+            return {
+                cpuUsage: Math.round(cpuUsage),
+                ramUsage: Math.round(ramUsage)
+            };
+        } catch (error) {
+            console.error("[UnraidService] getServerStats:", error);
+            return { cpuUsage: 0, ramUsage: 0 };
         }
     }
 }

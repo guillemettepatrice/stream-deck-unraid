@@ -4,7 +4,6 @@ export class ArrayStateView {
     public static render(rawState: string, displayState: string, freeBytes: number, totalBytes: number, freeText: string = "libre"): string {
         let bgColor = "#444444";
         
-        // La logique de couleur utilise toujours l'état brut de l'API
         switch(rawState.toUpperCase()) {
             case "STARTED": bgColor = "#28a745"; break;
             case "STOPPED": bgColor = "#6c757d"; break;
