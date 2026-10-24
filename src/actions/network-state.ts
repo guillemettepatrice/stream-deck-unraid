@@ -1,62 +1,37 @@
-import streamDeck, { action,  WillAppearEvent,   SingletonAction } from "@elgato/streamdeck";
+import streamDeck, { action } from "@elgato/streamdeck";
 import { UnraidService } from "../services/unraid.service";
-import { PollingService } from "../services/polling.service";
 import { NetworkStateView } from "../views/network-state.view";
+import { BasePollingAction } from "./base-polling.action";
 
 @action({ UUID: "ca.qg-gbcm.streamdeck.unraid.networkstate" })
-export class NetworkState extends SingletonAction {
-    override async onWillAppear(ev: WillAppearEvent<any>): Promise<void> {
-        await this.managePolling(ev.action);
-    }
+export class NetworkState extends BasePollingAction {
+    protected defaultRefreshRate = "2";
 
-    override onWillDisappear(ev: any): void {
-        PollingService.stop(ev.action.id);
-    }
-
-    override async onDidReceiveSettings(ev: any): Promise<void> {
-        await this.updateStatus(ev.action);
-        await this.managePolling(ev.action);
-    }
-
-    override async onSendToPlugin(ev: any): Promise<void> {
-        const payload = ev.payload as { event?: string };
-
+    public override async onSendToPlugin(ev: any): Promise<void> {
         
-        if (payload?.event === "getInterfacesList" || payload?.payload?.event === "getInterfacesList") {
+        const eventName = ev.payload?.event || ev.payload?.payload?.event;
+
+        if (eventName === "getInterfacesList") {
             try {
                 const interfaces = await UnraidService.getNetworkInterfacesList();
                 
-                if (streamDeck.ui) {
-                        await streamDeck.ui.sendToPropertyInspector({
-                            event: "getInterfacesList",
-                            items: interfaces
-                        });
-                    }
+                await streamDeck.ui.sendToPropertyInspector({
+                    event: "getInterfacesList",
+                    items: interfaces
+                });
             } catch (error) {
-                if (streamDeck.ui) {
-                    await streamDeck.ui.sendToPropertyInspector({
-                        event: "getInterfacesList",
-                        items: [{ label: "Erreur API", value: "" }]
-                    });
-                }
+                console.error("[NetworkState] ❌ Erreur:", error);
+                await streamDeck.ui.sendToPropertyInspector({
+                    event: "getInterfacesList",
+                    items: [{ label: "Erreur API", value: "" }]
+                });
             }
         }
     }
 
-    private async managePolling(action: any): Promise<void> {
-        const settings = await action.getSettings();
-        const seconds = parseInt(settings.refreshRate || "2", 10); 
-        
-        PollingService.start(action.id, seconds, async () => {
-            return await this.updateStatus(action);
-        });
-    }
-
-
-    private async updateStatus(action: any): Promise<boolean> {
+    protected async updateStatus(action: any): Promise<boolean> {
         try {
             const settings = await action.getSettings();
-            // Permettre de configurer 'eth0', 'br0', etc. via l'inspecteur plus tard
             const targetInterface = settings.interfaceName || "eth0"; 
 
             const networkStats = await UnraidService.getNetworkStats(targetInterface);
@@ -75,7 +50,7 @@ export class NetworkState extends SingletonAction {
             
             return true;
         } catch (error) {
-            console.error("[NetworkState] Erreur:", error);
+            console.error("[NetworkState] Erreur lors de la mise à jour:", error);
             await action.showAlert();
             return false;
         }

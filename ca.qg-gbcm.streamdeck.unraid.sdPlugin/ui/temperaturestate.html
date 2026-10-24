@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Configuration Température</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="sdpi-components.js"></script>
+</head>
+<body>
+    <div class="sdpi-wrapper">
+        <div class="sdpi-item">
+            <div class="sdpi-item-value tab-container">
+                <div class="tab selected" data-target="#tab-action" onclick="switchTab(this)"><sdpi-i18n key="Localization.Global.TabAction"></sdpi-i18n></div>
+                <div class="tab" data-target="#tab-global" onclick="switchTab(this)"><sdpi-i18n key="Localization.Global.TabServer"></sdpi-i18n></div>
+            </div>
+        </div>
+
+        <div id="tab-action" class="tab-content active">
+            <sdpi-item label="__MSG_Localization.Temperature.Sensor__">
+                <sdpi-textfield setting="sensorName" placeholder="CPU"></sdpi-textfield>
+            </sdpi-item>
+            <sdpi-item label="__MSG_Localization.Global.RefreshRate__">
+                <sdpi-textfield setting="refreshRate" placeholder="15"></sdpi-textfield>
+            </sdpi-item>
+        </div>
+
+        <div id="tab-global" class="tab-content">
+            <sdpi-item label="__MSG_Localization.Global.ServerHost__"><sdpi-textfield id="unraidHost" setting="unraidHost" placeholder="__MSG_Localization.Global.HostPlaceholder__" global></sdpi-textfield></sdpi-item>
+            <sdpi-item label="__MSG_Localization.Global.ApiKey__"><sdpi-password id="apiKey" setting="apiKey" placeholder="__MSG_Localization.Global.ApiKeyPlaceholder__" global></sdpi-password></sdpi-item>
+            <sdpi-item><sdpi-button id="saveBtn"><sdpi-i18n key="Localization.Global.SaveBtn"></sdpi-i18n></sdpi-button></sdpi-item>
+        </div>
+    </div>
+    <script src="inspector.js"></script>
+</body>
+</html>

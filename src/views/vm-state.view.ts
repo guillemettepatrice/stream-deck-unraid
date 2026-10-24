@@ -4,7 +4,6 @@ export class VmStateView {
         const bgColor = "#1C1C1C";
         const textColor = "#FFFFFF";
 
-        // Nettoyer le nom pour l'affichage (max 10 caractères)
         const displayName = vmName ? vmName.substring(0, 10) : "No VM";
 
         const svg = `

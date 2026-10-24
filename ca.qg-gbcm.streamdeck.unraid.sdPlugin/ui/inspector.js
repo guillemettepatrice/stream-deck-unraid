@@ -50,17 +50,14 @@ saveBtn.addEventListener('click', () => {
     }, 1500);
 });
 
-window.switchTab = function(clickedElement) {
-    document.querySelectorAll('.tab').forEach(tab => {
-        tab.classList.remove('selected');
-    });
+function switchTab(tabElement) {
+    const tabs = document.querySelectorAll('.tab');
+    const contents = document.querySelectorAll('.tab-content');
     
-    document.querySelectorAll('.tab-content').forEach(content => {
-        content.classList.remove('active');
-    });
+    tabs.forEach(t => t.classList.remove('selected'));
+    contents.forEach(c => c.classList.remove('active'));
     
-    clickedElement.classList.add('selected');
-    
-    const targetId = clickedElement.getAttribute('data-target');
-    document.querySelector(targetId).classList.add('active');
-};
+    tabElement.classList.add('selected');
+    const target = tabElement.getAttribute('data-target');
+    document.querySelector(target).classList.add('active');
+}

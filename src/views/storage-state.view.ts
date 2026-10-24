@@ -1,18 +1,16 @@
 export class StorageStateView {
     public static generate(usedPercentage: number, freeGb: number): string {
         const isWarning = usedPercentage >= 90;
-        const mainColor = isWarning ? "#FF3B30" : "#5881e0"; // Rouge ou Bleu
+        const mainColor = isWarning ? "#FF3B30" : "#5881e0";
         const bgColor = "#1C1C1C";
         const trackColor = "#333333";
         const textColor = "#FFFFFF";
 
-        // Calculs pour la jauge circulaire
         const radius = 45;
         const circumference = 2 * Math.PI * radius;
         const fillAmount = (usedPercentage / 100) * circumference;
         const emptyAmount = circumference - fillAmount;
 
-        // Formatage de l'espace libre (passage en To si > 1000 Go)
         const freeText = freeGb >= 1000 ? `${(freeGb / 1024).toFixed(1)}T` : `${freeGb}G`;
 
         const svg = `

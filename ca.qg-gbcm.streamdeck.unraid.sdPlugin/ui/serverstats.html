@@ -2,51 +2,50 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Configuration Serveur</title>
-    <style>
-        /* Colle ici le même bloc CSS <style> que dans tes autres fichiers html */
-        .tab-container { display: flex; border-bottom: 1px solid #3d3d3d; margin-bottom: 15px; padding-top: 5px; user-select: none; }
-        .tab { padding: 6px 15px; color: #999; font-family: "Segoe UI", Arial, sans-serif; font-size: 9pt; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
-        .tab:hover { color: #ddd; }
-        .tab.selected { color: #fff; border-bottom: 2px solid #5881e0; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-    </style>
+    <title>Configuration Réseau</title>
+    <link rel="stylesheet" href="styles.css" />
     <script src="sdpi-components.js"></script>
 </head>
 <body>
     <div class="sdpi-wrapper">
+        <!-- Navigation des onglets -->
         <div class="sdpi-item">
             <div class="sdpi-item-value tab-container">
                 <div class="tab selected" data-target="#tab-action" onclick="switchTab(this)">
-                    <sdpi-i18n key="Localization.TabAction"></sdpi-i18n>
+                    <sdpi-i18n key="Localization.Global.TabAction"></sdpi-i18n>
                 </div>
                 <div class="tab" data-target="#tab-global" onclick="switchTab(this)">
-                    <sdpi-i18n key="Localization.TabServer"></sdpi-i18n>
+                    <sdpi-i18n key="Localization.Global.TabServer"></sdpi-i18n>
                 </div>
             </div>
         </div>
 
-        <div id="tab-action" class="tab-content active">
-            <sdpi-item label="__MSG_Localization.RefreshRate__">
-                <sdpi-textfield setting="refreshRate" placeholder="5"></sdpi-textfield>
+        <!-- Contenu de l'onglet Action -->
+        <div id="tab-action" class="tab-content active">         
+            <sdpi-item label="__MSG_Localization.Global.RefreshRate__">
+                <sdpi-textfield setting="refreshRate" placeholder="2"></sdpi-textfield>
             </sdpi-item>
         </div>
 
+        <!-- Contenu de l'onglet Global -->
         <div id="tab-global" class="tab-content">
-            <sdpi-item label="__MSG_Localization.ServerHost__">
-                <sdpi-textfield id="unraidHost" setting="unraidHost" placeholder="__MSG_Localization.HostPlaceholder__" global></sdpi-textfield>
+            <sdpi-item label="__MSG_Localization.Global.ServerHost__">
+                <sdpi-textfield id="unraidHost" setting="unraidHost" placeholder="__MSG_Localization.Global.HostPlaceholder__" global></sdpi-textfield>
             </sdpi-item>
-            <sdpi-item label="__MSG_Localization.ApiKey__">
-                <sdpi-password id="apiKey" setting="apiKey" placeholder="__MSG_Localization.ApiKeyPlaceholder__" global></sdpi-password>
+            
+            <sdpi-item label="__MSG_Localization.Global.ApiKey__">
+                <sdpi-password id="apiKey" setting="apiKey" placeholder="__MSG_Localization.Global.ApiKeyPlaceholder__" global></sdpi-password>
             </sdpi-item>
+
             <sdpi-item>
                 <sdpi-button id="saveBtn">
-                    <sdpi-i18n key="Localization.SaveBtn"></sdpi-i18n>
+                    <sdpi-i18n key="Localization.Global.SaveBtn"></sdpi-i18n>
                 </sdpi-button>
             </sdpi-item>
         </div>
     </div>
+
+    <!-- Script centralisé -->
     <script src="inspector.js"></script>
 </body>
 </html>

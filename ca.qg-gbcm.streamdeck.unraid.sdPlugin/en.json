@@ -1,51 +1,74 @@
 {
-    "Name": "Unraid",
-    "Description": "Plugin made to control unraid disk array and dockers containers",
-    "ca.qg-gbcm.streamdeck.unraid.arraystate": {
-        "Name": "Disk array state",
-        "Tooltip": "Displays the array state and toggle it."
+  "Name": "Unraid",
+  "Description": "Plugin to monitor and control Unraid disks, Docker containers, VMs, and network.",
+  "ca.qg-gbcm.streamdeck.unraid.arraystate": {
+    "Name": "Array State",
+    "Tooltip": "Displays and modifies the disk array state."
+  },
+  "ca.qg-gbcm.streamdeck.unraid.dockerstate": {
+    "Name": "Docker State",
+    "Tooltip": "Displays and modifies a Docker container state."
+  },
+  "ca.qg-gbcm.streamdeck.unraid.serverstats": {
+    "Name": "Server Stats",
+    "Tooltip": "Displays CPU, RAM, and overall temperature."
+  },
+  "ca.qg-gbcm.streamdeck.unraid.networkstate": {
+    "Name": "Network State",
+    "Tooltip": "Displays bandwidth usage for an interface."
+  },
+  "ca.qg-gbcm.streamdeck.unraid.vmstate": {
+    "Name": "VM State",
+    "Tooltip": "Displays and controls a virtual machine state."
+  },
+  "ca.qg-gbcm.streamdeck.unraid.upsstate": {
+    "Name": "UPS State",
+    "Tooltip": "Displays the backup power supply status."
+  },
+  "Localization": {
+    "Global": {
+      "TabAction": "Action",
+      "TabServer": "Server",
+      "ServerHost": "Unraid Host (IP)",
+      "HostPlaceholder": "e.g., http://192.168.1.100",
+      "ApiKey": "API Key / Token",
+      "ApiKeyPlaceholder": "Paste your GraphQL token here",
+      "SaveBtn": "Save",
+      "Saved": "✔ Saved!",
+      "RefreshRate": "Refresh Rate (s)",
+      "ApiError": "API Error",
+      "NoConfig": "No config"
     },
-    "ca.qg-gbcm.streamdeck.unraid.dockerstate": {
-        "Name": "Docker container state",
-        "Tooltip": "Displays the container state and toggles it."
+    "Network": {
+      "Interface": "Network Interface"
     },
-    "ca.qg-gbcm.streamdeck.unraid.serverstats": {
-        "Name": "Server statistics",
-        "Tooltip": "Displays global server statistics."
+    "Docker": {
+      "ContainerName": "Docker Container",
+      "StateRunning": "RUNNING",
+      "StateExited": "STOPPED",
+      "StateCreated": "CREATED",
+      "StatePaused": "PAUSED",
+      "StateIntrouvable": "NOT FOUND"
     },
-    "Localization": {
-        "TabAction": "Action",
-        "TabServer": "Unraid Server",
-        "RefreshRate": "Refresh rate (sec)",
-        "ServerHost": "Unraid Server (IP)",
-        "HostPlaceholder": "e.g. http://192.168.1.10",
-        "ApiKey": "API Key",
-        "ApiKeyPlaceholder": "Your GraphQL API Key",
-        "SaveBtn": "Save configuration",
-        "Saved": "✔ Saved !",
-        "FreeSpace": "free",
-        "NoConfig": "No config",
-        "StateStarted": "STARTED",
-        "StateStopped": "STOPPED",
-        "StateParityCheck": "PARITY CHECK",
-        "StateError": "ERROR",
-        "StateUnknown": "UNKNOWN",
-        "ContainerName": "Container name",
-        "StateRunning": "RUNNING",
-        "StateExited": "EXITED",
-        "StateCreated": "CREATED",
-        "StatePaused": "PAUSED",
-        "StateIntrouvable": "NOT FOUND",
-        "VM": {
-            "Title": "Virtual Machine",
-            "SelectVM": "Select a VM",
-            "StateRunning": "Running",
-            "StateStopped": "Stopped"
-        },
-        "UPS": {
-            "Title": "Uninterruptible Power Supply (UPS)",
-            "Threshold": "Battery Alert Threshold (%)",
-            "ShowLoad": "Show Load (W)"
-        }
+    "VM": {
+      "Title": "Virtual Machine",
+      "VmName": "VM Name",
+      "SelectVM": "Select a VM",
+      "StateRunning": "Running",
+      "StateStopped": "Stopped"
+    },
+    "Array": {
+      "StateStarted": "STARTED",
+      "StateStopped": "STOPPED",
+      "StateParityCheck": "PARITY CHECK",
+      "StateError": "ERROR",
+      "StateUnknown": "UNKNOWN",
+      "FreeSpace": "free"
+    },
+    "UPS": {
+      "Title": "UPS",
+      "Threshold": "Battery Alert Threshold (%)",
+      "ShowLoad": "Show Load (W)"
     }
+  }
 }

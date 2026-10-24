@@ -1,37 +1,38 @@
-name: Build and Release Stream Deck Plugin
+name: Build and Release Plugin
 
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - 'v*' 
+  workflow_dispatch:
 
 jobs:
-  build:
+  build-and-release:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write 
+    
     steps:
-      - name: Checkout code
+      - name: Checkout du dépôt
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Configuration de Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Installation des dépendances
+        run: npm install
 
-      - name: Build TypeScript
+      - name: Compilation du code (TypeScript vers JavaScript)
         run: npm run build
 
-      - name: Pack Plugin
-        run: npx @elgato/cli pack ca.qg-gbcm.streamdeck.unraid.sdPlugin -o release/
+      - name: Empaquetage du plugin
+        run: npx @elgato/cli pack ca.qg-gbcm.streamdeck.unraid.sdPlugin
 
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publication sur GitHub Releases
+        uses: softprops/action-gh-release@v2
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./release/ca.qg-gbcm.streamdeck.unraid.streamDeckPlugin
-          asset_name: ca.qg-gbcm.streamdeck.unraid.streamDeckPlugin
-          asset_content_type: application/zip
+          files: "**/*.streamDeckPlugin" 
+          name: "Unraid Stream Deck v${{ github.ref_name }}"
+          generate_release_notes: true

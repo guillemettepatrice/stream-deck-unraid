@@ -1,11 +1,10 @@
 export class NetworkStateView {
     public static generate(rxMb: number, txMb: number, interfaceName: string): string {
         const bgColor = "#1C1C1C";
-        const rxColor = "#3A82F6"; // Bleu (Download)
-        const txColor = "#15C370"; // Vert (Upload)
+        const rxColor = "#3A82F6";
+        const txColor = "#15C370";
         const textColor = "#FFFFFF";
 
-        // Formater les valeurs (si < 1 MB/s, on affiche en KB/s pour plus de précision)
         const formatSpeed = (mbps: number) => {
             if (mbps < 1) return `${Math.round(mbps * 1024)} KB/s`;
             return `${mbps.toFixed(1)} MB/s`;

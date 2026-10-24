@@ -1,15 +1,12 @@
 export class UpsStateView {
     public static generate(status: string, batteryCharge: number, load: number): string {
-        // Alerte si l'onduleur passe sur batterie ou si la charge est <= 20%
         const isAlert = status.toLowerCase() !== "online" || batteryCharge <= 20;
-        const mainColor = isAlert ? "#FF3B30" : "#15C370"; // Rouge ou Vert Unraid
+        const mainColor = isAlert ? "#FF3B30" : "#15C370"; 
         const bgColor = "#1C1C1C";
         const textColor = "#FFFFFF";
 
-        // Calcule la largeur de la jauge intérieure (max 80px)
         const fillWidth = Math.max(0, Math.min(80, (batteryCharge / 100) * 80));
         
-        // Formate le statut pour qu'il soit court (ex: ONLINE, ONBATT)
         const displayStatus = status.substring(0, 8).toUpperCase();
 
         const svg = `
@@ -34,7 +31,6 @@ export class UpsStateView {
             </svg>
         `;
         
-        // Retourne le SVG sous forme d'URI compatible Stream Deck
         return `data:image/svg+xml;charset=utf8,${encodeURIComponent(svg.trim())}`;
     }
 }

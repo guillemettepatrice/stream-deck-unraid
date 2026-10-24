@@ -1,39 +1,17 @@
-import { streamDeck, action, KeyDownEvent, WillAppearEvent, WillDisappearEvent, DidReceiveSettingsEvent, SingletonAction } from "@elgato/streamdeck";
+import streamDeck, { action } from "@elgato/streamdeck";
 import { UnraidService } from "../services/unraid.service";
 import { ArrayStateView } from "../views/array-state.view";
-import { PollingService } from "../services/polling.service";
-
-type ActionSettings = {
-    refreshRate?: string;
-};
+import { BasePollingAction } from "./base-polling.action";
 
 @action({ UUID: "ca.qg-gbcm.streamdeck.unraid.arraystate" })
-export class ArrayState extends SingletonAction<ActionSettings> {
-    
-    override async onWillAppear(ev: WillAppearEvent<ActionSettings>): Promise<void> {
-        await this.updateStatus(ev.action);
-        await this.managePolling(ev.action);
-    }
+export class ArrayState extends BasePollingAction {
+    protected defaultRefreshRate = "10";
 
-    override async onWillDisappear(ev: WillDisappearEvent<ActionSettings>): Promise<void> {
-        PollingService.stop(ev.action.id);
-    }
-
-    override async onDidReceiveSettings(ev: DidReceiveSettingsEvent<ActionSettings>): Promise<void> {
-        await this.managePolling(ev.action);
-    }
-
-    override async onKeyDown(ev: KeyDownEvent<ActionSettings>): Promise<void> {
-        await this.updateStatus(ev.action);
-        await ev.action.showOk();
-    }
-
-    private async updateStatus(action: any): Promise<boolean> {
+    protected async updateStatus(action: any): Promise<boolean> {
         try {
-            const { state, totalSize, freeSpace } = await UnraidService.getArrayStatus();
-            
+            const status = await UnraidService.getArrayStatus();
             let stateTranslationKey = "StateUnknown";
-            switch(state.toUpperCase()) {
+            switch(status.state.toUpperCase()) {
                 case "STARTED": stateTranslationKey = "StateStarted"; break;
                 case "STOPPED": stateTranslationKey = "StateStopped"; break;
                 case "PARITY CHECK":
@@ -41,27 +19,22 @@ export class ArrayState extends SingletonAction<ActionSettings> {
                 case "ERROR": stateTranslationKey = "StateError"; break;
             }
 
-            const translatedState = streamDeck.i18n.translate(stateTranslationKey) || state;
-            const freeText = streamDeck.i18n.translate("FreeSpace") || "libre";
+            const translatedState = streamDeck.i18n.translate('Array.' + stateTranslationKey) || status.state;
+            const freeText = streamDeck.i18n.translate("Array.FreeSpace") || "libre";
             
-            const svgImage = ArrayStateView.render(state, translatedState, freeSpace, totalSize, freeText);
+            await action.setImage(ArrayStateView.render(
+                status.state,
+                translatedState,
+                status.freeSpace,
+                status.totalSize,
+                freeText
+            ));
             
-            await action.setImage(svgImage);
-            await action.setTitle("");
-            return true
+            return true;
         } catch (error) {
-            console.error("[ArrayState] Erreur UI:", error);
+            console.error("[ArrayState] Erreur lors de la mise à jour:", error);
             await action.showAlert();
-            return false
+            return false;
         }
-    }
-
-    private async managePolling(action: any): Promise<void> {
-        const settings = await action.getSettings();
-        const seconds = parseInt(settings.refreshRate || "5", 10);
-        
-        PollingService.start(action.id, seconds, async () => {
-            return await this.updateStatus(action);
-        });
     }
 }

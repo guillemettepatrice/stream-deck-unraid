@@ -1,42 +1,20 @@
-import { action, SingletonAction, WillAppearEvent } from "@elgato/streamdeck";
+import { action } from "@elgato/streamdeck";
 import { UnraidService } from "../services/unraid.service";
-import { PollingService } from "../services/polling.service";
 import { StorageStateView } from "../views/storage-state.view";
+import { BasePollingAction } from "./base-polling.action";
 
 @action({ UUID: "ca.qg-gbcm.streamdeck.unraid.storagestate" })
-export class StorageState extends SingletonAction {
-    override async onWillAppear(ev: WillAppearEvent<any>): Promise<void> {
-        await this.managePolling(ev.action);
-    }
+export class StorageState extends BasePollingAction {
+    protected defaultRefreshRate = "60";
 
-    override onWillDisappear(ev: any): void {
-        PollingService.stop(ev.action.id);
-    }
-
-    override async onDidReceiveSettings(ev: any): Promise<void> {
-        await this.managePolling(ev.action);
-    }
-
-    private async managePolling(action: any): Promise<void> {
-        const settings = await action.getSettings();
-        const seconds = parseInt(settings.refreshRate || "60", 10); // Le stockage change lentement, 60s par défaut
-        
-        PollingService.start(action.id, seconds, async () => {
-            return await this.updateStatus(action);
-        });
-    }
-
-    private async updateStatus(action: any): Promise<boolean> {
+    protected async updateStatus(action: any): Promise<boolean> {
         try {
-            const storage = await UnraidService.getStorageCapacity();
-            
-            if (storage.totalGb === 0) {
-                await action.showAlert();
-                return false;
-            }
 
-            const svg = StorageStateView.generate(storage.usedPercentage, storage.freeGb);
-            await action.setImage(svg);
+            const status = await UnraidService.getStorageCapacity();
+            await action.setImage(StorageStateView.generate(
+                status.usedPercentage, 
+                status.freeGb
+            ));
             
             return true;
         } catch (error) {

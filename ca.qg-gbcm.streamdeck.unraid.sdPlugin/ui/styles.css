@@ -1,0 +1,29 @@
+.tab-container {
+    display: flex;
+    border-bottom: 1px solid #3d3d3d;
+    margin-bottom: 15px;
+    padding-top: 5px;
+    user-select: none;
+}
+.tab {
+    padding: 6px 15px;
+    color: #999;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 9pt;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+.tab:hover {
+    color: #ddd;
+}
+.tab.selected {
+    color: #fff;
+    border-bottom: 2px solid #5881e0;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}

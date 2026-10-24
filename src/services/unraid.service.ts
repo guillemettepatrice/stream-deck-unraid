@@ -39,15 +39,15 @@ export type StorageStatusResult = {
 
 export type NetworkStatusResult = {
     interfaceName: string;
-    rxMegabytes: number; // Download
-    txMegabytes: number; // Upload
+    rxMegabytes: number; 
+    txMegabytes: number; 
 };
 
 export type TempStatusResult = {
     average: number;
     hottestName: string;
     hottestValue: number;
-    status: string; // "NORMAL", "WARNING", "CRITICAL"
+    status: string; 
 };
 
 export class UnraidService {
@@ -259,7 +259,6 @@ export class UnraidService {
     }
 
     public static async getUpsStatus(): Promise<UpsStatusResult> {
-        // La nouvelle requête adaptée au schéma de ton API
         const query = `
             query {
                 upsDevices {
@@ -278,7 +277,7 @@ export class UnraidService {
 
         try {
             const data = await this.queryGraphQL(query);
-            const upsData = data?.upsDevices?.[0]; // On prend le premier onduleur disponible
+            const upsData = data?.upsDevices?.[0];
 
             if (!upsData) {
                 return { name: "INCONNU", status: "INTROUVABLE", batteryCharge: 0, load: 0, timeleft: 0 };
@@ -298,7 +297,6 @@ export class UnraidService {
     }
 
     public static async getVmsList(): Promise<{label: string, value: string}[]> {
-        // La requête adaptée pour lister les domaines de VMs
         const query = `
             query {
                 vms {
@@ -317,7 +315,6 @@ export class UnraidService {
             return vms
                 .filter((vm: any) => vm.name)
                 .map((vm: any) => {
-                    // On utilise l'ID comme valeur (plus robuste que le nom pour les futures actions)
                     return { label: vm.name, value: vm.id }; 
                 })
                 .sort((a: any, b: any) => a.label.localeCompare(b.label));
@@ -367,7 +364,6 @@ export class UnraidService {
         if (!vmId) throw new Error("ID de la VM manquant");
 
         const isRunning = currentState === "RUNNING";
-        // On utilise 'stop' si elle tourne, sinon 'start'
         const action = isRunning ? "stop" : "start"; 
         
         const query = `
@@ -408,7 +404,6 @@ export class UnraidService {
                 return { totalGb: 0, freeGb: 0, usedGb: 0, usedPercentage: 0 };
             }
 
-            // Conversion des kilo-octets (KB) en Giga-octets (GB) ou Téra-octets
             const kbToGb = (kb: string) => Math.round(Number(kb) / 1024 / 1024);
             
             const totalGb = kbToGb(kbData.total);
@@ -429,6 +424,7 @@ export class UnraidService {
             query {
                 metrics {
                     network {
+                        operstate
                         name
                         rxSec
                         txSec
@@ -441,14 +437,12 @@ export class UnraidService {
             const data = await this.queryGraphQL(query);
             const interfaces = data?.metrics?.network || [];
             
-            // On cherche l'interface demandée, sinon on prend la première disponible
             const netInfo = interfaces.find((i: any) => i.name === targetInterface) || interfaces[0];
 
             if (!netInfo) {
                 return { interfaceName: "N/A", rxMegabytes: 0, txMegabytes: 0 };
             }
 
-            // Conversion des octets/seconde (Bytes/s) en Mégaoctets/seconde (MB/s)
             const bytesToMb = (bytes: number) => bytes / 1024 / 1024;
 
             return {
@@ -509,6 +503,10 @@ export class UnraidService {
                     networkInterfaces {
                         name
                         description
+                        virtual
+                        ipv4Addresses {
+                            address    
+                        }
                     }
                 }
             }
@@ -517,10 +515,9 @@ export class UnraidService {
         try {
             const data = await this.queryGraphQL(query);
             const interfaces = data?.info?.networkInterfaces || [];
-            return interfaces.map((net: any) => {
-                // On affiche le nom et la description si elle existe (ex: "eth0 (Intel I211)")
+            return interfaces.filter((net: any) => !net.virtual).map((net: any) => {
                 const label = net.description ? `${net.name} - ${net.description}` : net.name;
-                return { label: label, value: net.name };
+                return { label: label + ' [' + (net.ipv4Addresses && net.ipv4Addresses[0]?.address ? net.ipv4Addresses[0]?.address : 'N/A') + ']', value: net.name };
             });
         } catch (error) {
             console.error("[UnraidService] getNetworkInterfacesList erreur:", error);

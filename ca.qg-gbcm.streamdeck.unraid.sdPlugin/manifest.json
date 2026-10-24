@@ -58,14 +58,14 @@
 		{
 			"Name": "UPS Status",
 			"UUID": "ca.qg-gbcm.streamdeck.unraid.upsstate",
-			"Icon": "imgs/actions/server/icon",
+			"Icon": "imgs/actions/ups/icon",
 			"Tooltip": "Displays UPS battery charge, load and status.",
-			"PropertyInspectorPath": "ui/serverstats.html",
+			"PropertyInspectorPath": "ui/upsstate.html",
 			"UserTitleEnabled": false,
 			"Controllers": ["Keypad"],
 			"States": [
 				{
-				"Image": "imgs/actions/server/icon",
+				"Image": "imgs/actions/ups/icon",
 				"TitleAlignment": "bottom"
 				}
 			]
@@ -73,14 +73,14 @@
 		{
 			"Name": "VM State",
 			"UUID": "ca.qg-gbcm.streamdeck.unraid.vmstate",
-			"Icon": "imgs/actions/server/icon",
+			"Icon": "imgs/actions/vm/icon",
 			"Tooltip": "Affiche l'état d'une VM et permet de la démarrer/arrêter.",
 			"PropertyInspectorPath": "ui/vmstate.html",
 			"UserTitleEnabled": true,
 			"Controllers": ["Keypad"],
 			"States": [
 				{
-				"Image": "imgs/actions/server/icon",
+				"Image": "imgs/actions/vm/icon",
 				"TitleAlignment": "bottom"
 				}
 			]
@@ -88,14 +88,14 @@
 		{
 			"Name": "Storage Array",
 			"UUID": "ca.qg-gbcm.streamdeck.unraid.storagestate",
-			"Icon": "imgs/actions/server/icon",
+			"Icon": "imgs/actions/storage/icon",
 			"Tooltip": "Affiche l'utilisation du stockage principal (Array).",
-			"PropertyInspectorPath": "ui/serverstats.html",
+			"PropertyInspectorPath": "ui/storagestate.html",
 			"UserTitleEnabled": false,
 			"Controllers": ["Keypad"],
 			"States": [
 				{
-				"Image": "imgs/actions/server/icon",
+				"Image": "imgs/actions/storage/icon",
 				"TitleAlignment": "bottom"
 				}
 			]
@@ -103,14 +103,14 @@
 		{
 			"Name": "Network Traffic",
 			"UUID": "ca.qg-gbcm.streamdeck.unraid.networkstate",
-			"Icon": "imgs/actions/server/icon",
+			"Icon": "imgs/actions/network/icon",
 			"Tooltip": "Affiche le trafic réseau RX/TX en temps réel.",
 			"PropertyInspectorPath": "ui/networkstate.html",
 			"UserTitleEnabled": false,
 			"Controllers": ["Keypad"],
 			"States": [
 				{
-				"Image": "imgs/actions/server/icon",
+				"Image": "imgs/actions/network/icon",
 				"TitleAlignment": "bottom"
 				}
 			]
@@ -118,14 +118,14 @@
 		{
 			"Name": "Temperatures",
 			"UUID": "ca.qg-gbcm.streamdeck.unraid.temperaturestate",
-			"Icon": "imgs/actions/server/icon",
+			"Icon": "imgs/actions/temperature/icon",
 			"Tooltip": "Affiche le capteur le plus chaud du serveur.",
-			"PropertyInspectorPath": "ui/serverstats.html",
+			"PropertyInspectorPath": "ui/temperaturestate.html",
 			"UserTitleEnabled": false,
 			"Controllers": ["Keypad"],
 			"States": [
 				{
-				"Image": "imgs/actions/server/icon",
+				"Image": "imgs/actions/temperature/icon",
 				"TitleAlignment": "bottom"
 				}
 			]

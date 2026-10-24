@@ -1,51 +1,74 @@
 {
-    "Name": "Unraid",
-    "Description": "Plugin permettant de controler les disques Unraid et les conteneurs Docker.",
-    "ca.qg-gbcm.streamdeck.unraid.arraystate": {
-        "Name": "État de l'array de disques",
-        "Tooltip": "Affiche l'état de l'array de disque et le modifie."
+  "Name": "Unraid",
+  "Description": "Plugin permettant de contrôler les disques Unraid, les conteneurs Docker, les VM et le réseau.",
+  "ca.qg-gbcm.streamdeck.unraid.arraystate": {
+    "Name": "État de l'array",
+    "Tooltip": "Affiche l'état de l'array de disques et le modifie."
+  },
+  "ca.qg-gbcm.streamdeck.unraid.dockerstate": {
+    "Name": "État d'un conteneur",
+    "Tooltip": "Affiche l'état d'un conteneur Docker et le modifie."
+  },
+  "ca.qg-gbcm.streamdeck.unraid.serverstats": {
+    "Name": "Statistiques du serveur",
+    "Tooltip": "Affiche le CPU, la RAM et la température globale."
+  },
+  "ca.qg-gbcm.streamdeck.unraid.networkstate": {
+    "Name": "État du réseau",
+    "Tooltip": "Affiche l'utilisation de la bande passante d'une interface."
+  },
+  "ca.qg-gbcm.streamdeck.unraid.vmstate": {
+    "Name": "État d'une VM",
+    "Tooltip": "Affiche et gère l'état d'une machine virtuelle."
+  },
+  "ca.qg-gbcm.streamdeck.unraid.upsstate": {
+    "Name": "État de l'onduleur (UPS)",
+    "Tooltip": "Affiche le statut de l'alimentation de secours."
+  },
+  "Localization": {
+    "Global": {
+      "TabAction": "Action",
+      "TabServer": "Serveur",
+      "ServerHost": "Hôte Unraid (IP)",
+      "HostPlaceholder": "ex: http://192.168.1.100",
+      "ApiKey": "Clé API / Token",
+      "ApiKeyPlaceholder": "Collez votre token GraphQL ici",
+      "SaveBtn": "Sauvegarder",
+      "Saved": "✔ Sauvegardé !",
+      "RefreshRate": "Rafraîchissement (s)",
+      "ApiError": "Erreur API",
+      "NoConfig": "Aucune config"
     },
-    "ca.qg-gbcm.streamdeck.unraid.dockerstate": {
-        "Name": "État d'un conteneur Docker",
-        "Tooltip": "Affiche l'état d'un conteneur et le modifie."
+    "Network": {
+      "Interface": "Interface Réseau"
     },
-    "ca.qg-gbcm.streamdeck.unraid.serverstats": {
-        "Name": "Statistiques du serveur",
-        "Tooltip": "Affiche le CPU, la RAM et la température globale."
+    "Docker": {
+      "ContainerName": "Conteneur Docker",
+      "StateRunning": "EN COURS",
+      "StateExited": "ARRÊTÉ",
+      "StateCreated": "CRÉÉ",
+      "StatePaused": "EN PAUSE",
+      "StateIntrouvable": "INTROUVABLE"
     },
-    "Localization": {
-        "TabAction": "Action",
-        "TabServer": "Serveur Unraid",
-        "RefreshRate": "Rafraîchissement (sec)",
-        "ServerHost": "Serveur Unraid (IP)",
-        "HostPlaceholder": "ex: http://192.168.1.10",
-        "ApiKey": "Clé API",
-        "ApiKeyPlaceholder": "Ta clé API GraphQL",
-        "SaveBtn": "Sauvegarder la configuration",
-        "Saved": "✔ Sauvegardé !",
-        "FreeSpace": "libre",
-        "NoConfig": "No config",
-        "StateStarted": "DÉMARRÉ",
-        "StateStopped": "ARRÊTÉ",
-        "StateParityCheck": "VÉRIF. PARITÉ",
-        "StateError": "ERREUR",
-        "StateUnknown": "INCONNU",
-        "ContainerName": "Nom du conteneur",
-        "StateRunning": "EN COURS",
-        "StateExited": "ARRÊTÉ",
-        "StateCreated": "CRÉÉ",
-        "StatePaused": "EN PAUSE",
-        "StateIntrouvable": "INTROUVABLE",
-        "VM": {
-            "Title": "Machine Virtuelle",
-            "SelectVM": "Sélectionner une VM",
-            "StateRunning": "En cours",
-            "StateStopped": "Arrêtée"
-        },
-        "UPS": {
-            "Title": "Onduleur (UPS)",
-            "Threshold": "Seuil d'alerte batterie (%)",
-            "ShowLoad": "Afficher la charge (W)"
-        }
+    "VM": {
+      "Title": "Machine Virtuelle",
+      "VmName": "Nom de la VM",
+      "SelectVM": "Sélectionner une VM",
+      "StateRunning": "En cours",
+      "StateStopped": "Arrêtée"
+    },
+    "Array": {
+      "StateStarted": "DÉMARRÉ",
+      "StateStopped": "ARRÊTÉ",
+      "StateParityCheck": "VÉRIF. PARITÉ",
+      "StateError": "ERREUR",
+      "StateUnknown": "INCONNU",
+      "FreeSpace": "libre"
+    },
+    "UPS": {
+      "Title": "Onduleur (UPS)",
+      "Threshold": "Seuil d'alerte batterie (%)",
+      "ShowLoad": "Afficher la charge (W)"
     }
+  }
 }

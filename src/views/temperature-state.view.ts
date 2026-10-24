@@ -2,12 +2,10 @@ export class TemperatureStateView {
     public static generate(hottestName: string, hottestValue: number, status: string): string {
         const bgColor = "#1C1C1C";
         
-        // Détermination de la couleur selon le statut Unraid
-        let mainColor = "#15C370"; // NORMAL (Vert)
-        if (status === "WARNING") mainColor = "#FFA500"; // Orange
-        if (status === "CRITICAL" || status === "ERROR") mainColor = "#FF3B30"; // Rouge
+        let mainColor = "#15C370";
+        if (status === "WARNING") mainColor = "#FFA500"; 
+        if (status === "CRITICAL" || status === "ERROR") mainColor = "#FF3B30";
 
-        // Nettoyage du nom du capteur pour l'affichage (ex: "CPU Package" -> "CPU")
         const shortName = hottestName.substring(0, 12).toUpperCase();
 
         const svg = `
