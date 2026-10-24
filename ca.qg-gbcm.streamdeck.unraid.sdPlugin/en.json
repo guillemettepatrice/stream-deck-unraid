@@ -35,6 +35,17 @@
         "StateExited": "EXITED",
         "StateCreated": "CREATED",
         "StatePaused": "PAUSED",
-        "StateIntrouvable": "NOT FOUND"
+        "StateIntrouvable": "NOT FOUND",
+        "VM": {
+            "Title": "Virtual Machine",
+            "SelectVM": "Select a VM",
+            "StateRunning": "Running",
+            "StateStopped": "Stopped"
+        },
+        "UPS": {
+            "Title": "Uninterruptible Power Supply (UPS)",
+            "Threshold": "Battery Alert Threshold (%)",
+            "ShowLoad": "Show Load (W)"
+        }
     }
 }

@@ -54,6 +54,81 @@
 					"TitleAlignment": "bottom"
 				}
 			]
+		},
+		{
+			"Name": "UPS Status",
+			"UUID": "ca.qg-gbcm.streamdeck.unraid.upsstate",
+			"Icon": "imgs/actions/server/icon",
+			"Tooltip": "Displays UPS battery charge, load and status.",
+			"PropertyInspectorPath": "ui/serverstats.html",
+			"UserTitleEnabled": false,
+			"Controllers": ["Keypad"],
+			"States": [
+				{
+				"Image": "imgs/actions/server/icon",
+				"TitleAlignment": "bottom"
+				}
+			]
+		},
+		{
+			"Name": "VM State",
+			"UUID": "ca.qg-gbcm.streamdeck.unraid.vmstate",
+			"Icon": "imgs/actions/server/icon",
+			"Tooltip": "Affiche l'état d'une VM et permet de la démarrer/arrêter.",
+			"PropertyInspectorPath": "ui/vmstate.html",
+			"UserTitleEnabled": true,
+			"Controllers": ["Keypad"],
+			"States": [
+				{
+				"Image": "imgs/actions/server/icon",
+				"TitleAlignment": "bottom"
+				}
+			]
+		},
+		{
+			"Name": "Storage Array",
+			"UUID": "ca.qg-gbcm.streamdeck.unraid.storagestate",
+			"Icon": "imgs/actions/server/icon",
+			"Tooltip": "Affiche l'utilisation du stockage principal (Array).",
+			"PropertyInspectorPath": "ui/serverstats.html",
+			"UserTitleEnabled": false,
+			"Controllers": ["Keypad"],
+			"States": [
+				{
+				"Image": "imgs/actions/server/icon",
+				"TitleAlignment": "bottom"
+				}
+			]
+		},
+		{
+			"Name": "Network Traffic",
+			"UUID": "ca.qg-gbcm.streamdeck.unraid.networkstate",
+			"Icon": "imgs/actions/server/icon",
+			"Tooltip": "Affiche le trafic réseau RX/TX en temps réel.",
+			"PropertyInspectorPath": "ui/networkstate.html",
+			"UserTitleEnabled": false,
+			"Controllers": ["Keypad"],
+			"States": [
+				{
+				"Image": "imgs/actions/server/icon",
+				"TitleAlignment": "bottom"
+				}
+			]
+		},
+		{
+			"Name": "Temperatures",
+			"UUID": "ca.qg-gbcm.streamdeck.unraid.temperaturestate",
+			"Icon": "imgs/actions/server/icon",
+			"Tooltip": "Affiche le capteur le plus chaud du serveur.",
+			"PropertyInspectorPath": "ui/serverstats.html",
+			"UserTitleEnabled": false,
+			"Controllers": ["Keypad"],
+			"States": [
+				{
+				"Image": "imgs/actions/server/icon",
+				"TitleAlignment": "bottom"
+				}
+			]
 		}
 	],
 	"Category": "Unraid",

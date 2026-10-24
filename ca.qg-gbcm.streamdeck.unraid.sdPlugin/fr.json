@@ -35,6 +35,17 @@
         "StateExited": "ARRÊTÉ",
         "StateCreated": "CRÉÉ",
         "StatePaused": "EN PAUSE",
-        "StateIntrouvable": "INTROUVABLE"
+        "StateIntrouvable": "INTROUVABLE",
+        "VM": {
+            "Title": "Machine Virtuelle",
+            "SelectVM": "Sélectionner une VM",
+            "StateRunning": "En cours",
+            "StateStopped": "Arrêtée"
+        },
+        "UPS": {
+            "Title": "Onduleur (UPS)",
+            "Threshold": "Seuil d'alerte batterie (%)",
+            "ShowLoad": "Afficher la charge (W)"
+        }
     }
 }

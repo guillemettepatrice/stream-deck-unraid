@@ -22,6 +22,34 @@ export type ServerStatsResult = {
     ramUsage: number;
 };
 
+export type UpsStatusResult = {
+    name: string;
+    status: string;
+    batteryCharge: number;
+    load: number;
+    timeleft: number;
+};
+
+export type StorageStatusResult = {
+    totalGb: number;
+    freeGb: number;
+    usedGb: number;
+    usedPercentage: number;
+};
+
+export type NetworkStatusResult = {
+    interfaceName: string;
+    rxMegabytes: number; // Download
+    txMegabytes: number; // Upload
+};
+
+export type TempStatusResult = {
+    average: number;
+    hottestName: string;
+    hottestValue: number;
+    status: string; // "NORMAL", "WARNING", "CRITICAL"
+};
+
 export class UnraidService {
     /**
      * Méthode générique pour exécuter n'importe quelle requête GraphQL vers Unraid
@@ -195,9 +223,7 @@ export class UnraidService {
 
         try {
             await this.queryGraphQL(query);
-            console.log(`[Unraid API] Commande ${isRunning ? 'stop' : 'start'} envoyée pour l'ID ${containerId}`);
         } catch (error) {
-            console.error(`[UnraidService] Erreur lors du toggle de l'ID ${containerId}:`, error);
             throw error; 
         }
     }
@@ -229,6 +255,276 @@ export class UnraidService {
         } catch (error) {
             console.error("[UnraidService] getServerStats:", error);
             return { cpuUsage: 0, ramUsage: 0 };
+        }
+    }
+
+    public static async getUpsStatus(): Promise<UpsStatusResult> {
+        // La nouvelle requête adaptée au schéma de ton API
+        const query = `
+            query {
+                upsDevices {
+                    name
+                    status
+                    battery {
+                        chargeLevel
+                        estimatedRuntime
+                    }
+                    power {
+                        currentPower
+                    }
+                }
+            }
+        `;
+
+        try {
+            const data = await this.queryGraphQL(query);
+            const upsData = data?.upsDevices?.[0]; // On prend le premier onduleur disponible
+
+            if (!upsData) {
+                return { name: "INCONNU", status: "INTROUVABLE", batteryCharge: 0, load: 0, timeleft: 0 };
+            }
+
+            return {
+                name: upsData.name || "UPS",
+                status: upsData.status || "INCONNU",
+                batteryCharge: upsData.battery?.chargeLevel || 0,
+                load: upsData.power?.currentPower || 0,
+                timeleft: upsData.battery?.estimatedRuntime || 0
+            };
+        } catch (error) {
+            console.error("[UnraidService] getUpsStatus:", error);
+            return { name: "ERROR", status: "ERROR", batteryCharge: 0, load: 0, timeleft: 0 };
+        }
+    }
+
+    public static async getVmsList(): Promise<{label: string, value: string}[]> {
+        // La requête adaptée pour lister les domaines de VMs
+        const query = `
+            query {
+                vms {
+                    domains {
+                        id
+                        name
+                    }
+                }
+            }
+        `;
+
+        try {
+            const data = await this.queryGraphQL(query);
+            const vms = data?.vms?.domains || [];
+            
+            return vms
+                .filter((vm: any) => vm.name)
+                .map((vm: any) => {
+                    // On utilise l'ID comme valeur (plus robuste que le nom pour les futures actions)
+                    return { label: vm.name, value: vm.id }; 
+                })
+                .sort((a: any, b: any) => a.label.localeCompare(b.label));
+        } catch (error) {
+            console.error("[UnraidService] getVmsList erreur:", error);
+            return [{ label: "Erreur API", value: "" }];
+        }
+    }
+    public static async getVmStatus(vmId: string): Promise<{ id: string, state: string, isRunning: boolean }> {
+        if (!vmId) return { id: "", state: "INCONNU", isRunning: false };
+
+        const query = `
+            query {
+                vms {
+                    domains {
+                        id
+                        state
+                    }
+                }
+            }
+        `;
+
+        try {
+            const data = await this.queryGraphQL(query);
+            const domains = data?.vms?.domains || [];
+            const targetVm = domains.find((vm: any) => vm.id === vmId);
+
+            if (!targetVm) {
+                return { id: "", state: "INTROUVABLE", isRunning: false };
+            }
+
+            const currentState = targetVm.state || "INCONNU";
+            const isRunning = currentState === "RUNNING";
+
+            return {
+                id: targetVm.id,
+                state: currentState,
+                isRunning: isRunning
+            };
+        } catch (error) {
+            console.error("[UnraidService] getVmStatus:", error);
+            return { id: "", state: "ERROR", isRunning: false };
+        }
+    }
+
+    public static async toggleVm(vmId: string, currentState: string): Promise<void> {
+        if (!vmId) throw new Error("ID de la VM manquant");
+
+        const isRunning = currentState === "RUNNING";
+        // On utilise 'stop' si elle tourne, sinon 'start'
+        const action = isRunning ? "stop" : "start"; 
+        
+        const query = `
+            mutation {
+                vm {
+                    ${action}(id: "${vmId}")
+                }
+            }
+        `;
+
+        try {
+            await this.queryGraphQL(query);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    public static async getStorageCapacity(): Promise<StorageStatusResult> {
+        const query = `
+            query {
+                array {
+                    capacity {
+                        kilobytes {
+                            free
+                            total
+                            used
+                        }
+                    }
+                }
+            }
+        `;
+
+        try {
+            const data = await this.queryGraphQL(query);
+            const kbData = data?.array?.capacity?.kilobytes;
+
+            if (!kbData || !kbData.total) {
+                return { totalGb: 0, freeGb: 0, usedGb: 0, usedPercentage: 0 };
+            }
+
+            // Conversion des kilo-octets (KB) en Giga-octets (GB) ou Téra-octets
+            const kbToGb = (kb: string) => Math.round(Number(kb) / 1024 / 1024);
+            
+            const totalGb = kbToGb(kbData.total);
+            const freeGb = kbToGb(kbData.free);
+            const usedGb = kbToGb(kbData.used);
+            
+            const usedPercentage = totalGb > 0 ? Math.round((usedGb / totalGb) * 100) : 0;
+
+            return { totalGb, freeGb, usedGb, usedPercentage };
+        } catch (error) {
+            console.error("[UnraidService] getStorageCapacity:", error);
+            return { totalGb: 0, freeGb: 0, usedGb: 0, usedPercentage: 0 };
+        }
+    }
+
+    public static async getNetworkStats(targetInterface: string = "eth0"): Promise<NetworkStatusResult> {
+        const query = `
+            query {
+                metrics {
+                    network {
+                        name
+                        rxSec
+                        txSec
+                    }
+                }
+            }
+        `;
+
+        try {
+            const data = await this.queryGraphQL(query);
+            const interfaces = data?.metrics?.network || [];
+            
+            // On cherche l'interface demandée, sinon on prend la première disponible
+            const netInfo = interfaces.find((i: any) => i.name === targetInterface) || interfaces[0];
+
+            if (!netInfo) {
+                return { interfaceName: "N/A", rxMegabytes: 0, txMegabytes: 0 };
+            }
+
+            // Conversion des octets/seconde (Bytes/s) en Mégaoctets/seconde (MB/s)
+            const bytesToMb = (bytes: number) => bytes / 1024 / 1024;
+
+            return {
+                interfaceName: netInfo.name || "eth0",
+                rxMegabytes: bytesToMb(netInfo.rxSec || 0),
+                txMegabytes: bytesToMb(netInfo.txSec || 0)
+            };
+        } catch (error) {
+            console.error("[UnraidService] getNetworkStats:", error);
+            return { interfaceName: "ERROR", rxMegabytes: 0, txMegabytes: 0 };
+        }
+    }
+
+    public static async getTemperatures(): Promise<TempStatusResult> {
+        const query = `
+            query {
+                metrics {
+                    temperature {
+                        summary {
+                            average
+                            hottest {
+                                name
+                                current {
+                                    value
+                                    status
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        `;
+
+        try {
+            const data = await this.queryGraphQL(query);
+            const tempSummary = data?.metrics?.temperature?.summary;
+
+            if (!tempSummary || !tempSummary.hottest) {
+                return { average: 0, hottestName: "N/A", hottestValue: 0, status: "UNKNOWN" };
+            }
+
+            return {
+                average: Math.round(tempSummary.average || 0),
+                hottestName: tempSummary.hottest.name || "Sensor",
+                hottestValue: Math.round(tempSummary.hottest.current?.value || 0),
+                status: tempSummary.hottest.current?.status || "NORMAL"
+            };
+        } catch (error) {
+            console.error("[UnraidService] getTemperatures:", error);
+            return { average: 0, hottestName: "ERROR", hottestValue: 0, status: "ERROR" };
+        }
+    }
+
+    public static async getNetworkInterfacesList(): Promise<{label: string, value: string}[]> {
+        const query = `
+            query {
+                info {
+                    networkInterfaces {
+                        name
+                        description
+                    }
+                }
+            }
+        `;
+
+        try {
+            const data = await this.queryGraphQL(query);
+            const interfaces = data?.info?.networkInterfaces || [];
+            return interfaces.map((net: any) => {
+                // On affiche le nom et la description si elle existe (ex: "eth0 (Intel I211)")
+                const label = net.description ? `${net.name} - ${net.description}` : net.name;
+                return { label: label, value: net.name };
+            });
+        } catch (error) {
+            console.error("[UnraidService] getNetworkInterfacesList erreur:", error);
+            return [{ label: "Erreur API", value: "" }];
         }
     }
 }
